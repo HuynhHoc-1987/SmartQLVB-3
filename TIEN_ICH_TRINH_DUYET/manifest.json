@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "SmartQLVB v5 - Tải văn bản QLVB Vĩnh Long",
+  "version": "5.0.0",
+  "description": "Tải tệp bằng thao tác được người dùng cho phép trên trang QLVB, sau đó tự nhập bản sao vào SmartQLVB cục bộ.",
+  "permissions": [
+    "downloads",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:8765/*",
+    "https://qlvbdh.vinhlong.gov.vn/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SmartQLVB - Kết nối tải văn bản"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://qlvbdh.vinhlong.gov.vn/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

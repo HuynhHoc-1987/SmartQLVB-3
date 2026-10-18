@@ -1,0 +1,35 @@
+name: Dong goi SmartQLVB Windows
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  windows:
+    runs-on: windows-2022
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          architecture: 'x64'
+      - name: Cai thu vien va kiem tra ma nguon
+        shell: pwsh
+        run: |
+          python -m pip install -r requirements-build.txt
+          python -m py_compile server.py
+          python -m unittest test_settings.py
+      - name: Tao EXE (PyInstaller onedir)
+        shell: pwsh
+        run: |
+          python -m PyInstaller --noconfirm --clean --onedir --console --name SmartQLVB --add-data "index.html;." --collect-all fitz server.py
+          Copy-Item -Recurse -Force TIEN_ICH_TRINH_DUYET dist/SmartQLVB/TIEN_ICH_TRINH_DUYET
+          Copy-Item -Force README_CAI_DAT.txt dist/SmartQLVB/README_CAI_DAT.txt
+          Compress-Archive -Path dist/SmartQLVB -DestinationPath dist/SmartQLVB_Windows_x64.zip -Force
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SmartQLVB_Windows_x64
+          path: dist/SmartQLVB_Windows_x64.zip
+          retention-days: 30

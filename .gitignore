@@ -1,0 +1,6 @@
+DU_LIEU/
+__pycache__/
+*.pyc
+build/
+dist/
+*.spec
